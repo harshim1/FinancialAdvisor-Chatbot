@@ -1,1 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Financial Advisor Bot</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .chat-box { max-width: 600px; margin: auto; border: 1px solid #ccc; padding: 20px; }
+        .message { margin: 10px 0; }
+        .user { font-weight: bold; }
+        .bot { color: green; }
+    </style>
+</head>
+<body>
+    <div class="chat-box">
+        <h2>Smart Financial Advisor</h2>
+        <div id="chat-log"></div>
+        <input type="text" id="user-input" placeholder="Ask about budgeting, saving, investing..." style="width: 80%;">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+    <script>
+        function sendMessage() {
+            const input = document.getElementById("user-input");
+            const message = input.value;
+            if (!message) return;
 
+            const chatLog = document.getElementById("chat-log");
+            chatLog.innerHTML += `<div class='message user'>You: ${message}</div>`;
+            input.value = "";
+
+            fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                chatLog.innerHTML += `<div class='message bot'>Bot: ${data.reply}</div>`;
+            });
+        }
+    </script>
+</body>
+</html>
